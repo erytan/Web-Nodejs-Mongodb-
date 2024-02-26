@@ -2,6 +2,8 @@ const User = require('../models/user')
 const asyncHandler = require('express-async-handler')
 const { generateAccessToken, generateRefreshToken } = require('../middlewares/jwt')
 const jwt = require('jsonwebtoken')
+const sendMail = require('../ultils/sendMail')
+const crypto = require('crypto')
 
 const register = asyncHandler(async(req, res) => {
     const { email, password, firstname, lastname } = req.body
@@ -126,14 +128,51 @@ const logout = asyncHandler(async(req, res) => {
 //Check token có giống với token mà server gửi qua email hay không
 //Change pasword
 const forgetPassword = asyncHandler(async(req, res) => {
-    const { email } = req.email
-    if (!email) throw new Error('Missing email')
-    const user = await User.findOne({
-        email
-    })
-    if (!User) throw new Error('User not found')
+    const { email } = req.query;
+    if (!email) throw new Error('Missing email');
 
+    const user = await User.findOne({ email });
+    if (!user) throw new Error('User not found');
+
+    const resetToken = user.createPasswordChangedToken();
+    await user.save();
+
+    const html = `Xin vui lòng click vào link bên dưới để thay đổi mật khẩu của bạn. Link này sẽ hết hạn trong vòng 15 phút kể từ bây giờ <a href=${process.env.URL_SERVER}/api/user/reset-password/${resetToken}> Click Here </a>`;
+
+    const data = {
+        email, // Đây là người nhận email
+        html
+    };
+
+    const rs = await sendMail(data);
+
+    return res.status(200).json({
+        success: true,
+        rs
+    });
+});
+const resetPassword = asyncHandler(async(req, res) => {
+    const { password, token } = req.body
+    console.log({ password, token });
+    if (!password || !token) throw new Error('Missing input')
+    const passwordResetToken = crypto.createHash('sha256').update(token).digest('hex')
+    const user = await User.findOne({
+        passwordResetToken,
+        passwordResetExpires: { $gt: Date.now() }
+    })
+    if (!user) throw new Error('Invalid password reset token')
+    user.password = password
+    user.passwordResetToken = undefined
+    user.passwordChangeAt = Date.now()
+    user.passwrordResetExpires = undefined
+    await user.save()
+    return res.status(200).json({
+        success: true,
+        mes: user ? 'update password' : 'something went wrong'
+    })
 })
+
+
 
 
 module.exports = {
@@ -141,5 +180,7 @@ module.exports = {
     login,
     getCurrent,
     refreshAccessToken,
-    logout
+    logout,
+    forgetPassword,
+    resetPassword
 }
