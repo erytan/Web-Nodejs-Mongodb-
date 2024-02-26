@@ -1,5 +1,8 @@
 const User = require('../models/user')
 const asyncHandler = require('express-async-handler')
+const { generateAccessToken, generateRefreshToken } = require('../middlewares/jwt')
+const jwt = require('jsonwebtoken')
+
 const register = asyncHandler(async(req, res) => {
     const { email, password, firstname, lastname } = req.body
     if (!email || !password || !firstname || !lastname)
@@ -26,17 +29,117 @@ const login = asyncHandler(async(req, res) => {
         })
     const response = await User.findOne({ email })
     if (response && await response.isCorrectPassword(password)) {
+        // tách password and role ra khỏi responese
         const { password, role, ...userData } = response.toObject()
+            // tạo access token
+        const accessToken = generateAccessToken(response._id, role)
+            // tạo refresh token
+        const refreshToken = generateRefreshToken(response._id)
+            // lưu refreshToken vào database
+        await User.findByIdAndUpdate(response._id, { refreshToken }, { new: true })
+            // lưu refreshToken vào cookie
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 })
         return res.status(200).json({
             success: true,
-            userData: response
+            accessToken,
+            userData
         })
     } else {
         throw new Error('Invalid password')
     }
 })
+const getCurrent = asyncHandler(async(req, res) => {
+    const { _id } = req.user
+    const user = await User.findById(_id).select('-refreshToken -password -role')
+    return res.status(200).json({
+        success: false,
+        rs: user ? user : 'User not found'
+    })
+})
+const refreshAccessToken = asyncHandler(async(req, res) => {
+    try {
+        // Lấy token từ cookie
+        const refreshToken = req.cookies.refreshToken;
+
+        // Kiểm tra xem refreshToken có tồn tại không
+        if (!refreshToken) {
+            throw new Error('No refresh token found in cookies');
+        }
+
+        // Xác thực refreshToken
+        const decoded = await jwt.verify(refreshToken, process.env.JWT_SECRET);
+
+        // Tìm người dùng trong cơ sở dữ liệu dựa trên decoded._id và refreshToken
+        const user = await User.findOne({ _id: decoded._id, refreshToken });
+
+        if (!user) {
+            throw new Error('User not found or refreshToken does not match');
+        }
+
+        // Tạo và trả về accessToken mới
+        const newAccessToken = generateAccessToken(user._id, user.role);
+        return res.status(200).json({
+            success: true,
+            newAccessToken
+        });
+    } catch (error) {
+        return res.status(401).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+const logout = asyncHandler(async(req, res) => {
+    try {
+        // Lấy refreshToken từ cookie
+        const refreshToken = req.cookies.refreshToken;
+
+        // Kiểm tra xem refreshToken có tồn tại không
+        if (!refreshToken) {
+            throw new Error('No refresh token found in cookies');
+        }
+
+        // Cập nhật refreshToken trong cơ sở dữ liệu
+        await User.findOneAndUpdate({ refreshToken }, { refreshToken: '' });
+
+        // Xóa refreshToken trong cookie của trình duyệt
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: true
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: 'User logged out successfully'
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+//client gửi gmail
+//Server check email có hợp lệ hay không => gửi gmail + kèm theo link ( password change token)
+//Client check email=> click link
+//Client gửi api kemf token
+//Check token có giống với token mà server gửi qua email hay không
+//Change pasword
+const forgetPassword = asyncHandler(async(req, res) => {
+    const { email } = req.email
+    if (!email) throw new Error('Missing email')
+    const user = await User.findOne({
+        email
+    })
+    if (!User) throw new Error('User not found')
+
+})
+
 
 module.exports = {
     register,
-    login
+    login,
+    getCurrent,
+    refreshAccessToken,
+    logout
 }
