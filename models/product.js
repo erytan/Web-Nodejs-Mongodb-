@@ -50,7 +50,7 @@ var productSchema = new mongoose.Schema({
         postedBy: { type: mongoose.Types.ObjectId, ref: 'User' },
         comment: { type: String }
     }],
-    totalRating: {
+    totalRatings: {
         type: Number,
         default: 0
     },
