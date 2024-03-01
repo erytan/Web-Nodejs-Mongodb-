@@ -23,14 +23,15 @@ const createProduct = asyncHandler(async(req, res) => {
     }
 });
 const getProduct = asyncHandler(async(req, res) => {
-        const { pid } = req.params
-        const product = await Product.findById(pid);
-        return res.status(200).json({
-            success: product ? true : false,
-            productData: product ? product : "Cannot get product "
-        })
+    const { pid } = req.params
+    const product = await Product.findById(pid);
+    return res.status(200).json({
+        success: product ? true : false,
+        productData: product ? product : "Cannot get product "
     })
-    //Filtering & sorting && pagination
+})
+
+//Filtering & sorting && pagination
 const getProducts = asyncHandler(async(req, res) => {
     const queries = {...req.query }
         //tách các trường hợp đặt biệt ra khỏi query
@@ -147,7 +148,10 @@ const ratings = asyncHandler(async(req, res) => {
         return res.status(500).json({ error: error.message });
     }
 });
-
+const uploadImagesProduct = asyncHandler(async(req, res) => {
+    console.log(req.file)
+    return res.json('OKE')
+})
 
 module.exports = {
     createProduct,
@@ -155,5 +159,6 @@ module.exports = {
     getProducts,
     updateProduct,
     deleteProduct,
-    ratings
+    ratings,
+    uploadImagesProduct
 }
