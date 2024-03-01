@@ -148,11 +148,57 @@ const ratings = asyncHandler(async(req, res) => {
         return res.status(500).json({ error: error.message });
     }
 });
+// update ảnh mới ( + dồn ảnh )
+// const uploadImagesProduct = asyncHandler(async(req, res) => {
+//     const { pid } = req.params
+//     if (pid) {
+//     }
+//     if (!req.files) throw new Error("Missing input")
+//     const response = await Product.findByIdAndUpdate(pid, { $push: { images: { $each: req.files.map(el => el.path) } } }, { new: true })
+//     return res.status(200).json({
+//         mess: response ? true : false,
+//         updateProduct: response ? response : 'Can not update product '
+//     })
+// })
 const uploadImagesProduct = asyncHandler(async(req, res) => {
-    console.log(req.file)
-    return res.json('OKE')
-})
+    const { pid } = req.params;
 
+    if (!req.files) {
+        throw new Error("Missing input");
+    }
+
+    // Kiểm tra xem có tìm thấy sản phẩm với pid không
+    const existingProduct = await Product.findById(pid);
+    if (!existingProduct) {
+        return res.status(404).json({
+            success: false,
+            message: "Product not found"
+        });
+    }
+
+    try {
+        // Xóa ảnh cũ
+        existingProduct.images = [];
+
+        // Thêm ảnh mới
+        existingProduct.images.push(...req.files.map(el => el.path));
+
+        // Lưu sản phẩm với ảnh mới
+        const updatedProduct = await existingProduct.save();
+
+        return res.status(200).json({
+            success: true,
+            updatedProduct
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update product",
+            error: error.message
+        });
+    }
+});
 module.exports = {
     createProduct,
     getProduct,
