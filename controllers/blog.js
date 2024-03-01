@@ -148,7 +148,41 @@ const getBlogs = asyncHandler(async(req, res) => {
         });
     }
 });
+const uploadImageBlog = asyncHandler(async(req, res) => {
+    const { blid } = req.params;
 
+    if (!req.file) {
+        throw new Error("Missing input");
+    }
+
+    // Kiểm tra xem có tìm thấy sản phẩm với blid không
+    const existingBlog = await Blog.findById(blid);
+    if (!existingBlog) {
+        return res.status(404).json({
+            success: false,
+            message: "Blog not found"
+        });
+    }
+    try {
+        // Gán ảnh mới cho blog
+        existingBlog.images = req.file.path;
+
+        // Lưu sản phẩm với ảnh mới
+        const updatedBlog = await existingBlog.save();
+
+        return res.status(200).json({
+            success: true,
+            updatedBlog
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update Blog",
+            error: error.message
+        });
+    }
+});
 module.exports = {
     createBlog,
     getBlog,
@@ -156,5 +190,7 @@ module.exports = {
     deleteBlog,
     likeBlog,
     dislikeBlog,
-    getBlogs
+    getBlogs,
+    uploadImageBlog
+
 }
