@@ -1,83 +1,120 @@
-    import React, { useState, useCallback } from "react";
-    import icons from "../../ultils/icons.js";
-    import { InputField, Button } from "../../components";
+import React, { useState, useCallback } from "react";
+import { InputField, Button } from "../../components";
+import { apiLogin, apiRegister } from "../../apis/user";
+import Swal from "sweetalert2"
+const Login = () => {
+  const [payload, setPayload] = useState({
+    email: "",
+    password: "",
+      firstname: "",
+      lastname: "",
+        phone:"",
+  });
+    const resetPayload = () => {
+        setPayload({
+            email: "",
+            password: "",
+              firstname: "",
+              lastname: "",
+                phone:"",
+        })
+    }
+  const [isRegister, setIsRegister] = useState(false);
+  const handleSubmit = useCallback(async () => {
+    const { firstname, lastname,phone, ...data } = payload;
+    if (isRegister) {
+        const response = await apiRegister(payload)
+        if (response.success) {
+            Swal.fire('Congratulation', response.me, 'Success').then(() => {
+                setIsRegister(false)
+                resetPayload()
+            })
+        }
+    } else {
+        const rs = await apiLogin(data)
+        console.log(rs);
+    }
+}, [payload,isRegister]);
 
-    const { GiAbstract066 } = icons;
-    const Login = () => {
-    const [payload, setPayload] = useState({
-        email: "",
-        password: "",
-        name: "",
-    });
-    const [isRegister, setIsregister] = useState(false);
-    const handleSubmit = useCallback(() => {
-        console.log(payload);
-    }, [payload]);
-    return (
-        <div>
-        <table className="w-main">
-            <tbody>
-            <tr>
-                <td className=" w-[500px]">
-                <table>
-                    <tbody>
-                    <tr>
-                        <td>
-                        <GiAbstract066 color="Blue" />
-                        </td>
-                        <td className="px-[10px]">Quên mật khẩu!</td>
-                    </tr>
-                    </tbody>
-                </table>
-                </td>
-                <td className="h-[34px] w-[900px]">
-                <table>
-                    <tbody>
-                    <tr>
-                        <td className="w-[130px] flex-center">
-                        {isRegister ? "Register" : "Tên đăng nhập"}
-                        
-                        </td>
-                                        <td className="w-[225px] " align="left">
-                                            {isRegister && <InputField
-                                                value={payload.name}
-                                                setValue={setPayload}
-                                                nameKey="name"
-                                            />}
-                            <InputField
-                            value={payload.gmail}
-                            setValue={setPayload}
-                            nameKey="gmail"
-                            />
-                        </td>
-                        <td className="w-[100px] flex-center">
-                        &nbsp;
-                        <span> Mật khẩu</span>
-                        </td>
-                        <td className="w-[225px] " >
-                            <InputField
-                            value={payload.password}
-                            setValue={setPayload}
-                            nameKey="password"
-                            type="password"
-                            />
-                        </td>
-                        <td>
-                        <Button name={isRegister ? "Register" : "Login"} handleOnClick={handleSubmit} fw />
-                                        </td>
-                                        
-                                    </tr>
-                                 
-                                </tbody>
-                                <div className=" w-full"onClick={()=>setIsregister(true)}>
-                                            <span className="text-blue-500 hover:underline cursor-pointer">Create account</span>
-                                </div>
-                </table>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+
+  const handleCreateAccountClick = () => {
+    setIsRegister(true);
+  };
+
+  return (
+    <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <h2>{isRegister ? "Register" : "Login"}</h2>
+      </div>
+      <form>
+              <div style={{ marginBottom: "15px" }}>
+                  {isRegister && (
+            <InputField
+              value={payload.firstname}
+              setValue={setPayload}
+              nameKey="firstname"
+              placeholder="firstname"
+            />
+          )}
+              </div>
+              <div style={{ marginBottom: "15px" }}>
+                  {isRegister && (
+            <InputField
+              value={payload.lastname}
+              setValue={setPayload}
+              nameKey="lastname"
+              placeholder="lastname"
+            />
+          )}
+              </div>
+              <div style={{ marginBottom: "15px" }}>
+                  {isRegister && (
+            <InputField
+              value={payload.phone}
+              setValue={setPayload}
+              nameKey="phone"
+              placeholder="phone"
+            />
+          )}
+          </div>
+          
+        <div style={{ marginBottom: "15px" }}>
+          
+          <InputField
+            value={payload.email}
+            setValue={setPayload}
+            nameKey="email"
+            placeholder="Email"
+          />
         </div>
-    );
-    };
-    export default Login;
+        <div style={{ marginBottom: "15px" }}>
+          <InputField
+            value={payload.password}
+            setValue={setPayload}
+            nameKey="password"
+            type="password"
+            placeholder="Mật khẩu"
+          />
+        </div>
+        <Button
+          name={isRegister ? "Register" : "Login"}
+          handleOnClick={handleSubmit}
+          style={{ width: "100%", marginBottom: "10px" }}
+          fw
+        />
+        {!isRegister && (
+          <p style={{ textAlign: "right" }}>
+            <span
+              className="text-blue-500 hover:underline cursor-pointer"
+              onClick={handleCreateAccountClick}
+            >
+              Tạo tài khoản mới
+            </span>
+          </p>
+        )}
+      </form>
+    </div>
+  );
+};
+
+export default Login;

@@ -1,0 +1,23 @@
+/* styles.css */
+
+/* Định dạng phần header */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Định dạng cho chữ "Your Logo" */
+  .logo-text {
+    font-size: 2rem; /* Kích thước chữ */
+    font-weight: bold; /* Độ đậm của chữ */
+    text-decoration: none; /* Loại bỏ gạch chân dưới */
+    color: #ffffff; /* Màu chữ */
+  }
+  
+  /* Định dạng cho phần đăng nhập */
+  .login-container {
+    display: flex;
+    align-items: center;
+  }
+  
