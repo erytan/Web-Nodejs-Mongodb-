@@ -40,6 +40,9 @@ const Header = () => {
         <Menu.Item key="5">
           <Link to={`/${path.QR}`}>QR</Link>
         </Menu.Item>
+        <Menu.Item key="6">
+          <Link to={`/${path.QRSCANNER}`}>QR</Link>
+        </Menu.Item>
         <Menu.Item key="4" style={{ float: 'right' }}>
   <div className="border w-main flex justify-between h-[150px] py-[15px]">
     <div className="flex text-[13px]">

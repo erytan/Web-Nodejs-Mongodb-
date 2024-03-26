@@ -4,6 +4,7 @@ const path = {
     HOME: '',
     ALL: '*',
     LOGIN: 'login',
-    QR:'qrcode',
+    QR: 'qrcode',
+    QRSCANNER : 'qrscan',
 }
 export default path

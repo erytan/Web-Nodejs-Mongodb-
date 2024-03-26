@@ -21,7 +21,7 @@ const QrCode = () => {
   useEffect(() => {
     if (isComponentLoaded) {
       // Cập nhật lại URL khi component được tải lại
-      setUrl(current?.lastname);
+      setUrl(`${current?.firstname} ${current?.lastname} -- ${current?._id}`);
     }
   }, [current, isComponentLoaded]);
 
@@ -45,7 +45,7 @@ const QrCode = () => {
           id="qrCode"
           value={url} // Giá trị của QR code từ state 'url'
           size={300}
-          bgColor={"#3896"}
+          bgColor={"#9829"}
           level={"H"}
         />
       </div>
