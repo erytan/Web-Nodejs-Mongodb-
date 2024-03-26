@@ -10,3 +10,8 @@ export const apiRegister = (data) => axios({
     method: 'post',
     data
 })
+export const apiGetUSER = (data) => axios({
+    url: 'user/current',
+    method: 'get',
+    data
+})
