@@ -48,7 +48,9 @@ const Login = () => {
         const rs = await apiLogin(data);
         if (rs.success) {
           dispatch(register({ isLoggedIn: true, token: rs.accessToken, userData: rs.userData }));
-          navigate(`/${path.HOME}`);
+          // Kiểm tra vai trò của người dùng
+        
+            navigate(`/${path.HOME}`);
         } else {
           Swal.fire('Opps!', rs.mes, 'error');
         }

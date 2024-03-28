@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState,Pragment } from "react";
 import { Link } from "react-router-dom";
 import { Menu } from "antd";
 import path from "../ultils/path";
@@ -41,7 +41,15 @@ const Header = () => {
           <Link to={`/${path.QR}`}>QR</Link>
         </Menu.Item>
         <Menu.Item key="6">
-          <Link to={`/${path.QRSCANNER}`}>QR</Link>
+          <Link to={`/${path.QRSCANNER}`}>QRScanner</Link>
+        </Menu.Item>
+        <Menu.Item Key="7">
+          {/* {!current && <Pragment>
+            <Link to={+current?.role === 2 ? `${path.ADMIN}` : `${path.HOME}`} > Tets
+            </Link>
+            
+          </Pragment>}
+           */}
         </Menu.Item>
         <Menu.Item key="4" style={{ float: 'right' }}>
   <div className="border w-main flex justify-between h-[150px] py-[15px]">
@@ -52,7 +60,7 @@ const Header = () => {
         {isLoggedIn ? (
           isUserDataLoaded && (
             <div className="flex gap-4 text-sm items-center">
-              <small>{`Welcome, ${current?.firstname} ${current?.lastname}`}</small>
+              <small>{`Welcome, ${current?.firstname} ${current?.lastname}` }</small>
               {/* Conditionally render the logout button only when navigate is available */}
               {navigate && (
                 <span onClick={() => {
