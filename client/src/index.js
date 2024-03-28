@@ -1,20 +1,23 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot } from 'react-dom';
 import { Provider } from 'react-redux';
-import { store } from './store/store';
+import { store, persistor } from './store/redux'; // Sửa lại tên biến `perstistor` thành `persistor`
 import App from './App';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const container = document.getElementById('root');
-const root = createRoot(container);
+const root = createRoot(container); // Sửa lại từ `createRoot` thành `createRoot`
 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <App/>
-      </BrowserRouter>
+      <PersistGate loading={null} persistor={persistor}> {/* Sửa lại biến `perstistor` thành `persistor` */}
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </PersistGate>
     </Provider>
   </React.StrictMode>
 );

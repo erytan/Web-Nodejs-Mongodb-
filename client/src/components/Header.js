@@ -1,16 +1,32 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState,Pragment } from "react";
 import { Link } from "react-router-dom";
-import { Menu } from "antd"
+import { Menu } from "antd";
 import path from "../ultils/path";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { getCurrent } from "../store/user/asyncAction";
+import { logout } from '../store/user/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
- 
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng trang
+
+  const [isUserDataLoaded, setIsUserDataLoaded] = useState(false);
+  const [isPageReloaded, setIsPageReloaded] = useState(false); // Biến đánh dấu đã làm mới trang
+
+  const { isLoggedIn, current } = useSelector(state => state.user);
+  
+  useEffect(() => {
+    if (isLoggedIn && !isPageReloaded) { // Kiểm tra đã đăng nhập và chưa làm mới trang
+      dispatch(getCurrent()).then(() => {
+        setIsUserDataLoaded(true);
+        setIsPageReloaded(true);
+      });
+    }
+  }, [dispatch, isLoggedIn, isPageReloaded]);
+  
   return (
     <header className="bg-gray-800 text-white py-4 px-6 flex justify-between items-center">
-      <Link to="/" className="text-2xl font-bold">
-        Your Logo
-      </Link>
       <Menu mode="horizontal" theme="dark" defaultSelectedKeys={["1"]} className="flex gap-4">
         <Menu.Item key="1">
           <Link to="/">Trang chủ</Link>
@@ -21,23 +37,49 @@ const Header = () => {
         <Menu.Item key="3">
           <Link to="/lien-he">Liên hệ</Link>
         </Menu.Item>
-      </Menu>
-      <div className="border w-main flex justify-between h-[150px] py-[15px]">
-            <Link to={`/${path.HOME}`}>
-            {/* <img src={logo} alt="logo" className='w-[135px] object-contain' /> */}
+        <Menu.Item key="5">
+          <Link to={`/${path.QR}`}>QR</Link>
+        </Menu.Item>
+        <Menu.Item key="6">
+          <Link to={`/${path.QRSCANNER}`}>QRScanner</Link>
+        </Menu.Item>
+        <Menu.Item Key="7">
+          {/* {!current && <Pragment>
+            <Link to={+current?.role === 2 ? `${path.ADMIN}` : `${path.HOME}`} > Tets
             </Link>
-            <div className="flex text-[13px]">
-            <div className="py-[100px] h-[4px] px-[10px]">
-                <span className="flex gap-4 items-center">
-                {/* <Gi3DGlasses color='Blue'/> */}
-
-                <Link className="font-semibold" to={`/${path.LOGIN}`}>
-                    Đăng nhập
-                </Link>
-                </span>
+            
+          </Pragment>}
+           */}
+        </Menu.Item>
+        <Menu.Item key="4" style={{ float: 'right' }}>
+  <div className="border w-main flex justify-between h-[150px] py-[15px]">
+    <div className="flex text-[13px]">
+      <div className="py-[100px] h-[4px] px-[10px]">
+        <span className="flex gap-4 items-center">
+        </span>
+        {isLoggedIn ? (
+          isUserDataLoaded && (
+            <div className="flex gap-4 text-sm items-center">
+              <small>{`Welcome, ${current?.firstname} ${current?.lastname}` }</small>
+              {/* Conditionally render the logout button only when navigate is available */}
+              {navigate && (
+                <span onClick={() => {
+                  dispatch(logout());
+                  navigate('/'); // Điều hướng về trang chủ sau khi đăng xuất
+                }}> Logout </span>
+              )}
             </div>
-            </div>
-        </div>
+          )
+        ) : (
+          <Link className="hover:Text-gray-800" to={`/${path.LOGIN}`}>
+            Đăng nhập
+          </Link>
+        )}
+      </div>
+    </div>
+  </div>
+</Menu.Item>
+      </Menu>
     </header>
   );
 };

@@ -21,14 +21,17 @@ var userSchema = new mongoose.Schema({
     mobile: {
         type: String,
         required: true,
+        unique: true,
     },
     password: {
         type: String,
+
         required: true,
     },
     role: {
         type: String,
-        default: 'user',
+        enum:[1,2],
+        default: '1',
     },
     cart: {
         type: Array,

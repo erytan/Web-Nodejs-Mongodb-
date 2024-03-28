@@ -4,6 +4,7 @@ require('dotenv').config();
 const dbConnection = require('./config/dbconnect');
 const initRoutes = require('./routes')
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 
 const app = express(); // app express
@@ -11,6 +12,10 @@ const port = process.env.PORT || 3000; //port
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cors({
+    origin: '*'
+  }));
+  
 dbConnection()
 initRoutes(app)
 

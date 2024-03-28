@@ -6,6 +6,8 @@ const blogCategory = require('./blogCategory')
 const blog = require('./blog')
 const brand = require('./brand')
 const coupon = require('./coupon')
+const monhoc = require ('./monhoc')
+const monhocdky = require('./monhocdky')
 
 const initRoutes = (app) => {
     app.use('/api/user', userRouter)
@@ -15,6 +17,8 @@ const initRoutes = (app) => {
     app.use('/api/blog', blog)
     app.use('/api/brand', brand)
     app.use('/api/coupon', coupon)
+    app.use('/api/monhoc', monhoc)
+    app.use('/api/dangkymonhoc',monhocdky)
 
     app.use(notFound)
     app.use(errHandler)
