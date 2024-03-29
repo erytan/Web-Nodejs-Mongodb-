@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState,Pragment } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu } from "antd";
 import path from "../ultils/path";
@@ -43,13 +43,8 @@ const Header = () => {
         <Menu.Item key="6">
           <Link to={`/${path.QRSCANNER}`}>QRScanner</Link>
         </Menu.Item>
-        <Menu.Item Key="7">
-          {/* {!current && <Pragment>
-            <Link to={+current?.role === 2 ? `${path.ADMIN}` : `${path.HOME}`} > Tets
-            </Link>
-            
-          </Pragment>}
-           */}
+        <Menu.Item key="7">
+        
         </Menu.Item>
         <Menu.Item key="4" style={{ float: 'right' }}>
   <div className="border w-main flex justify-between h-[150px] py-[15px]">
