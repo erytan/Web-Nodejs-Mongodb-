@@ -1,8 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom'
-import { Login, Home, Public, Qr, QrScannerr, Checklogin } from './pages/public'
-
-import { Admin } from './pages/Admin'
+import { Login, Home, Public, Qr } from './pages/public'
+import { Admin,HomeAdmin,QrScanner,CreateMonHoc} from './pages/Admin'
 import path from './ultils/path';
 
 function App() {
@@ -10,15 +9,16 @@ function App() {
     <div className="min-h-screen font-main">
       <Routes>
         <Route path={path.PUBLIC} element={<Public />}>
-            
             <Route path={path.HOME} element={<Home />} />
             <Route path={path.QR} element={<Qr />} />
-            <Route path={path.LOGIN} element={<Login />} />
-            <Route path={path.QRSCANNER} element={<QrScannerr />} />
-          </Route>
-          <Route path ={path.ADMIN} element={<Admin />}> 
+          <Route path={path.LOGIN} element={<Login />} />
           
           </Route>
+        <Route path={path.ADMIN} element={<Admin />}> 
+            <Route path={path.HOMEADMIN} element= {<HomeAdmin/>} />
+          <Route path={path.QRSCANNER} element={<QrScanner />} />
+          <Route path ={path.CREATEMONHOC} element={<CreateMonHoc/>}/>
+        </Route>
       </Routes>
     </div>
   );

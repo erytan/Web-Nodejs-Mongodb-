@@ -5,7 +5,12 @@ const path = {
     ALL: '*',
     LOGIN: 'login',
     QR: 'qrcode',
+
+
+    //Admin
+    ADMIN: 'Admin',
+    HOMEADMIN: 'Home',
     QRSCANNER: 'qrscan',
-    ADMIN:'Admin',
+    CREATEMONHOC: 'create-monhoc'
 }
 export default path

@@ -2,7 +2,7 @@ import React from 'react';
 import { QRScanner  } from '../../components';
 import { useSelector } from 'react-redux';
 
-const QRScannerr = () => {
+const QRScan = () => {
   const { isLoggedIn } = useSelector(state => state.user);
 
   return (
@@ -16,4 +16,4 @@ const QRScannerr = () => {
   );
 };
 
-export default QRScannerr;
+export default QRScan; 

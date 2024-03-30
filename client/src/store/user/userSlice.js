@@ -23,7 +23,7 @@ export const userSilce = createSlice({
         logout: (state, action) => {
             state.isLoggedIn = false
             state.token = null;
-        } 
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(action.getCurrent.pending, (state) => {

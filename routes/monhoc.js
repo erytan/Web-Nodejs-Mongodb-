@@ -2,7 +2,7 @@ const router = require('express').Router()
 const ctrls = require('../controllers/monhoc')
 const { verifyAccessToken, isAdmin } = require('../middlewares/verifyToken')
 
-router.post('/', [verifyAccessToken, isAdmin], ctrls.createMonHoc)
+router.post('/crate-monhoc', [verifyAccessToken, isAdmin], ctrls.createMonHoc)
 router.get('/', ctrls.getMonHoc)
 router.put('/:mid', [verifyAccessToken, isAdmin], ctrls.updateMonHoc)
 router.put('/tgmonhoc/:mid', [verifyAccessToken,isAdmin], ctrls.updateTGMonHoc)

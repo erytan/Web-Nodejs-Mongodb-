@@ -7,7 +7,8 @@ import { getCurrent } from "../store/user/asyncAction";
 import { logout } from '../store/user/userSlice';
 import { useNavigate } from 'react-router-dom';
 
-const Header = () => {
+const HeaderAdmin = () => {
+
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng trang
   const [isUserDataLoaded, setIsUserDataLoaded] = useState(false);
@@ -24,23 +25,25 @@ const Header = () => {
     }
   }, [dispatch, isLoggedIn, isPageReloaded]);
   
+
   return (
     <header className="bg-gray-800 text-white py-4 px-6 flex justify-between items-center">
-      <Menu mode="horizontal" theme="dark" defaultSelectedKeys={["1"]} className="flex gap-4">
-        <Menu.Item key="1">
-          <Link to="/">Trang chủ</Link>
+      <Menu
+        mode="horizontal"
+        theme="dark"
+        defaultSelectedKeys={["1"]}
+        className="flex gap-4"
+      >
+        <Menu.Item key="8">
+          <Link to="Home">Trang chủ</Link>
         </Menu.Item>
-        <Menu.Item key="5">
-          <Link to={`/${path.QR}`}>QR</Link>
+        <Menu.Item key="12">
+          <Link to={`${path.QRSCANNER}`}>QRScanner</Link>
         </Menu.Item>
-        {current && <Fragment>
-          <Menu.Item key="7">
-          <Link
-            to={+current?.role === 1 ?`/${path.ADMIN}`: `/${path.HOME}`}
-          />
-          Profile
+        <Menu.Item key="9">
+          <Link to={`${path.CREATEMONHOC}`}>Create-Monhoc</Link>
         </Menu.Item>
-        </Fragment>}
+
         <Menu.Item key="4" style={{ float: 'right' }}>
   <div className="border w-main flex justify-between h-[150px] py-[15px]">
     <div className="flex text-[13px]">
@@ -74,4 +77,4 @@ const Header = () => {
   );
 };
 
-export default memo(Header);
+export default memo(HeaderAdmin);
