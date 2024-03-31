@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Outlet, Navigate } from 'react-router-dom'
 import path from '../../ultils/path'
-import {HeaderAdmin,Footer,sideboard} from '../../components'
+import {HeaderAdmin,Footer} from '../../components'
 const AdminLayout = () => {
     const { isLoggedIn, current } = useSelector(state => state.user)
     if (!isLoggedIn || !current || +current.role !== 1) return <Navigate to={`/${path.LOGIN}`} replace={true} />

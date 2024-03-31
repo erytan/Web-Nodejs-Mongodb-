@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState,Fragment } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu } from "antd";
 import path from "../ultils/path";
@@ -41,7 +41,10 @@ const HeaderAdmin = () => {
           <Link to={`${path.QRSCANNER}`}>QRScanner</Link>
         </Menu.Item>
         <Menu.Item key="9">
-          <Link to={`${path.CREATEMONHOC}`}>Create-Monhoc</Link>
+          <Link to={`${path.CREATEMONHOC}`}>Thêm môn học</Link>
+        </Menu.Item>
+        <Menu.Item key="10">
+          <Link to={`${path.DSMONHOC}`}>Danh sách môn học</Link>
         </Menu.Item>
 
         <Menu.Item key="4" style={{ float: 'right' }}>
