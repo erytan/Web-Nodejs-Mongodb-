@@ -1,0 +1,89 @@
+/* Dangkymonhoc.css */
+
+/* Phần tổng thể */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Tiêu đề */
+h2 {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+/* Bảng */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin-top: 20px;
+}
+
+/* Tiêu đề cột */
+th {
+  border: 1px solid black;
+  text-align: center;
+  background-color: #f2f2f2; /* Màu nền xám nhạt */
+  padding: 10px;
+}
+
+/* Nội dung cột */
+td {
+  border: 1px solid black;
+  text-align: center;
+  padding: 10px;
+}
+
+/* Danh sách sinh viên đăng ký */
+ul {
+  list-style-type: none; /* Ẩn các dấu đầu dòng của danh sách */
+  padding: 0;
+}
+
+/* Mỗi sinh viên trong danh sách */
+li {
+  margin-bottom: 5px;
+}
+
+/* Phần popup */
+.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Màu nền đen với độ mờ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Hiệu ứng bóng */
+}
+.hidden {
+  display: none;
+}
+/* Nút Thêm */
+.button-add {
+  background-color: #007bff; /* Màu xanh đậm */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-add:hover {
+  background-color: #0056b3; /* Màu xanh nhạt */
+}
+
+/* Chỉnh sửa cho bảng có chiều rộng 100% */
+.table-container table {
+  width: 100%;
+}
