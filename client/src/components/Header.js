@@ -33,6 +33,9 @@ const Header = () => {
         <Menu.Item key="5">
           <Link to={`/${path.QR}`}>QR</Link>
         </Menu.Item>
+        <Menu.Item key="9">
+          <Link to={`/${path.DKYMONHOC}`}>Đăng ký môn học</Link>
+        </Menu.Item>
         {current && <Fragment>
           <Menu.Item key="7">
           <Link
@@ -47,7 +50,8 @@ const Header = () => {
       <div className="py-[100px] h-[4px] px-[10px]">
         <span className="flex gap-4 items-center">
         </span>
-        {isLoggedIn ? (
+                {isLoggedIn && current
+                  ? (
           isUserDataLoaded && (
             <div className="flex gap-4 text-sm items-center">
               <small>{`Welcome, ${current?.firstname} ${current?.lastname}` }</small>

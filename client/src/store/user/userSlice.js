@@ -37,6 +37,8 @@ export const userSilce = createSlice({
         builder.addCase(action.getCurrent.rejected, (state, action) => {
             state.isLoading = false;
             state.current = null;
+            state.isLoggedIn = false;
+            state.token = null;
         });
     }
 })
