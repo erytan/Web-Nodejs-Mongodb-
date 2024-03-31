@@ -1,29 +1,27 @@
-const mongoose = require('mongoose'); // Erase if already required
+const mongoose = require('mongoose');
 
 // Declare the Schema of the Mongo model
-var monhocdangkySchema = new mongoose.Schema({
+const monhocdangkySchema = new mongoose.Schema({
     tgmonhoc: {
         type: String,
         required: true,
-        unique: true,
+        unique: false, // Giữ nguyên nếu bạn muốn giữ tính duy nhất của trường này
     },
     mamonhoc: {
         type: String,
-        required: true,
-        unique: true,
+        // Không cần unique ở đây nếu bạn muốn cho phép trùng lặp
     },
     sinhviendky: {
         type: Array,
-        default: []
+        default: [[]]
     },
     tenmonhoc: {
         type: String,
-        required: true,
-        unique: true,
+        // Không cần unique ở đây nếu bạn muốn cho phép trùng lặp
     },
 }, {
     timestamps: true
 });
 
-//Export the model
-module.exports = mongoose.model('MonhocDky', monhocdangkySchema);   
+// Export the model
+module.exports = mongoose.model('MonhocDky', monhocdangkySchema);

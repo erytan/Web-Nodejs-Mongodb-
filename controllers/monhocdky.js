@@ -1,35 +1,42 @@
 const asyncHandler = require('express-async-handler')
 const monhocdky = require('../models/monhocdky')
-
 const createMonHocDky = asyncHandler(async (req, res) => {
-    // Check if the request body exists
+    // Kiểm tra xem có request body không
     if (!req.body) {
         return res.status(400).json({ success: false, error: 'Missing input: Request body is required' });
     }
 
-    // Check if required fields are provided in the request body
-    if (!req.body.tgmonhoc || !req.body.tenmonhoc || !req.body.mamonhoc|| !req.body.sinhviendky) {
+    // Kiểm tra xem các trường bắt buộc có được cung cấp trong request body không
+    if (!req.body.tgmonhoc || !req.body.tenmonhoc || !req.body.mamonhoc || !req.body.sinhviendky) {
         return res.status(400).json({ success: false, error: 'Missing input' });
     }
 
     try {
-        // Create a new document using the data from the request body
+        // Tạo một tài liệu mới sử dụng dữ liệu từ request body
         const newMonHocDky = await monhocdky.create(req.body);
 
-        // Return a success response with the created document
+        // Trả về một phản hồi thành công với tài liệu đã tạo
         return res.status(200).json({ success: true, data: newMonHocDky });
     } catch (error) {
-        // Return an error response if document creation fails
-        return res.status(500).json({ success: false, error: 'Something went wrong' });
+        // Xử lý trường hợp xung đột nếu cần
+        if (error.code === 11000 && error.keyPattern && (error.keyPattern.mamonhoc || error.keyPattern.tenmonhoc)) {
+            // Xử lý tình huống xung đột ở đây (ví dụ: bỏ qua, cập nhật, hoặc xử lý theo cách khác)
+            return res.status(400).json({ success: false, error: 'Duplicate mamonhoc or tenmonhoc' });
+        } else {
+            // Trả về một phản hồi lỗi chung nếu không phải là lỗi xung đột
+            console.error("Lỗi khi tạo tài liệu:", error);
+            return res.status(500).json({ success: false, error: 'Something went wrong' });
+        }
     }
 });
+
 const updateTGMonHoc = asyncHandler(async(req, res) => {
-    const { mid } = req.params;
+    const { tid } = req.params;
     if (!req.body.sinhviendky) {
-        return res.status(400).json({ success: false, error: 'Missing input: tgmonhoc' });
+        return res.status(400).json({ success: false, error: 'Missing input: Ma sv' });
     }
     try {
-        const response = await monhocdky.findByIdAndUpdate(mid, { $push: { sinhviendky: req.body.sinhviendky } }, { new: true }).select('-tenmonhoc -mamonhoc -tgmonhoc');
+        const response = await monhocdky.findByIdAndUpdate(tid, { $push: { sinhviendky: req.body.sinhviendky } }, { new: true }).select('-tenmonhoc -mamonhoc -tgmonhoc');
         return res.status(200).json({
             success: response ? true : false,
             mes: response ? response : "Can not update svdky mon hoc"

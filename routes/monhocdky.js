@@ -2,10 +2,9 @@ const router = require('express').Router()
 const ctrls = require('../controllers/monhocdky')
 const { verifyAccessToken, isAdmin } = require('../middlewares/verifyToken')
 
-router.post('/crate-monhoc', [verifyAccessToken, isAdmin], ctrls.createMonHocDky)
+router.post('/dky-monhoc', [verifyAccessToken, isAdmin], ctrls.createMonHocDky)
 router.get('/', ctrls.getMonHocDky)
-// router.put('/:mid', [verifyAccessToken, isAdmin], ctrls.updateMonHoc)
-router.put('/dkymonhoc/:mid', [verifyAccessToken], ctrls.updateTGMonHoc)
+router.put('/dkymonhoc/:tid', [verifyAccessToken], ctrls.updateTGMonHoc)
 
 // router.get('/one/:blid', ctrls.getBlogs)
 // router.put('/like/:blid', verifyAccessToken, ctrls.likeBlog)
