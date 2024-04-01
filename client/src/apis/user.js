@@ -15,3 +15,8 @@ export const apiGetUSER = (data) => axios({
     method: 'get',
     data
 })
+export const apiCheckin = (data) => axios({
+    url: 'user/checkin',
+    method: 'post',
+    data
+})

@@ -240,7 +240,25 @@ const updateUserAddress = asyncHandler(async(req, res) => {
         updateAddress: response ? response : "Can not update address"
     })
 })
-
+// thêm api checkin
+const monhocdky = require('../models/monhocdky')
+const checkIn = asyncHandler(async(req, res) => {
+    const { mamonhoc,_id } = req.body
+    if (!mamonhoc || !_id) throw new Error('Missing input')
+    const response = await monhocdky.find({ "mamonhoc": mamonhoc });
+    let flag = false;
+    for (const doc of response) {
+        if (doc.sinhviendky && doc.sinhviendky.includes(_id)) {
+            console.log(`Tìm thấy ${_id} trong trường sinhviendky của ${mamonhoc}`);
+            flag= true;
+            break;
+        }
+    }
+    return res.status(200).json({
+        success: flag ? true : false,
+        message: flag ? "Checkin thành công" : "User not register this class"
+    })
+})
 module.exports = {
     register,
     login,
@@ -253,5 +271,5 @@ module.exports = {
     deleteUser,
     updateUser,
     updateUserByAdmin,
-    updateUserAddress,
+    updateUserAddress,checkIn
 }
