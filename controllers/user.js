@@ -246,6 +246,12 @@ const checkIn = asyncHandler(async(req, res) => {
     const { mamonhoc,_id } = req.body
     if (!mamonhoc || !_id) throw new Error('Missing input')
     const response = await monhocdky.find({ "mamonhoc": mamonhoc });
+    if (response == []){
+        return res.status(400).json({
+            success: false,
+            message: "Không có môn học này !!!"
+        })
+    }
     let flag = false;
     for (const doc of response) {
         if (doc.sinhviendky && doc.sinhviendky.includes(_id)) {

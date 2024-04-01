@@ -12,14 +12,13 @@ function QRScanner() {
             const imageSrc = webcamRef.current.getScreenshot();
             try {
                 let qrCode = await detectQRCode(imageSrc);
-                alert("Đã checkin User " + qrCode);
                 let payload = {
                     mamonhoc:selectedSubject,
                     _id:qrCode.split('--')[1].trim()
                 }
                 const response = await apiCheckin(payload);
                 if (response.success) {
-                    Swal.fire('Congratulation', response.message, 'success').then(() => {
+                    Swal.fire('Congratulation', response.message + ' sinh viên '+qrCode.split('--')[0].trim(), 'success').then(() => {
                     });
                   } else {
                     Swal.fire('Opps!', response.message, 'error');
