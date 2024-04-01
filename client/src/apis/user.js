@@ -20,3 +20,9 @@ export const apiCheckin = (data) => axios({
     method: 'post',
     data
 })
+export const apiGetMaMonHoc = (data) => axios({
+    url: 'user/monhoc',
+    method: 'get',
+    data
+})
+

@@ -1,12 +1,13 @@
 import React, { useCallback, useRef, useState, useEffect } from "react";
 import Webcam from "react-webcam";
 import QrScanner from "jsqr";
-import { apiCheckin } from "../apis/user";
+import { apiCheckin,apiGetMaMonHoc } from "../apis/user";
 import Swal from "sweetalert2";
 function QRScanner() {
     const webcamRef = useRef(null);
     const [isCameraOn, setIsCameraOn] = useState(false);
-
+    const [subjects, setSubjects] = useState([]);
+    
     const captureAndSend = useCallback(async () => {
         if (webcamRef.current && isCameraOn) {
             const imageSrc = webcamRef.current.getScreenshot();
@@ -69,12 +70,19 @@ function QRScanner() {
     const handleSubjectChange = (event) => {
         setSelectedSubject(event.target.value);
     };
-    const subjects = [
-        "RE982194(305001)",
-        "RE982194(515660)",
-        "History",
-        "English",
-    ];
+    // lấy danh sánh môn học từ database
+    useEffect(() => {
+        async function getMonHoc() {
+          try {
+            const responses = await apiGetMaMonHoc();
+            const newData = responses.Monhoc.map(response => response.mamonhoc);
+            setSubjects(newData);
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        }
+        getMonHoc();
+      }, []);
     return (
         <div>
             <div>

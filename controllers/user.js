@@ -265,6 +265,13 @@ const checkIn = asyncHandler(async(req, res) => {
         message: flag ? "Checkin thành công" : "User not register this class"
     })
 })
+const getMonHoc = asyncHandler(async(req, res) => {
+    const response = await monhocdky.find()
+    return res.status(200).json({
+        mes: response ? true : false,
+        Monhoc: response ? response : " Something went wrong",
+    })
+});
 module.exports = {
     register,
     login,
@@ -277,5 +284,5 @@ module.exports = {
     deleteUser,
     updateUser,
     updateUserByAdmin,
-    updateUserAddress,checkIn
+    updateUserAddress,checkIn,getMonHoc
 }
