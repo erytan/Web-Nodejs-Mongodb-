@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState, useEffect } from 'react';
 import Webcam from 'react-webcam';
 import { apiGetDKyMonHoc, apiMonHocDky } from "../apis/dkymonhoc";
 import './QRScanner.css';
-
+import QrScanner from "jsqr";
 function QRScanner() {
     const webcamRef = useRef(null);
     const [cameraStates, setCameraStates] = useState({}); // Lưu trạng thái của camera cho từng môn học
@@ -34,29 +34,68 @@ function QRScanner() {
             ...prevStates,
             [monHoc._id]: !prevStates[monHoc._id], // Đảo ngược trạng thái của camera cho môn học đó
         }));
-        
         try {
             const response = await apiMonHocDky(monHoc._id);
             console.log("Mon hoc da chon:", response);
-            if (response && response.sinhviendky) {
-                setSinhVienDky(response.sinhviendky);
+            if (response && response.data.sinhviendky) {
+                setSinhVienDky( response.data.sinhviendky);
             }
         } catch (error) {
             console.error("Error fetching selected monhoc:", error);
         }
     };
-
-    // Xử lý khi quét QR thành công
-    const handleScanSuccess = useCallback(async (qrCode) => {
-        setQrCode(qrCode); // Lưu mã QR đã quét vào state
-        if (selectedMonHoc && sinhVienDky.includes(qrCode)) {
-            setSuccessMessage(`Quét thành công cho sinh viên: ${qrCode}`);
-            setErrorMessage(null);
-        } else {
-            setSuccessMessage(null);
-            setErrorMessage(`Sinh viên ${qrCode} không đăng ký môn học này.`);
+    // add function
+    const captureAndSend = useCallback(async () => {
+        if (webcamRef.current && cameraStates) {
+            const imageSrc = webcamRef.current.getScreenshot();
+            try {
+                let qrCodedetech = await detectQRCode(imageSrc);
+                setQrCode(qrCodedetech); // Lưu mã QR đã quét vào state
+                if (selectedMonHoc && sinhVienDky.includes(qrCode)) {
+                    setSuccessMessage(`Quét thành công cho sinh viên: ${qrCode}`);
+                    setErrorMessage(null);
+                } else {
+                    setSuccessMessage(null);
+                    setErrorMessage(`Sinh viên ${qrCode} không đăng ký môn học này.`);
+                }
+            } catch (error) {
+                console.log("Không tìm thấy hình ảnh");
+            }
         }
-    }, [selectedMonHoc, sinhVienDky]);
+    }, [webcamRef, cameraStates, selectedMonHoc, sinhVienDky]);
+    const detectQRCode = (imageSrc) => {
+        return new Promise((resolve, reject) => {
+            const image = new Image();
+            image.src = imageSrc;
+            image.onload = () => {
+                const canvas = document.createElement("canvas");
+                canvas.width = image.width;
+                canvas.height = image.height;
+                const context = canvas.getContext("2d");
+                context.drawImage(image, 0, 0);
+                const imageData = context.getImageData(0, 0, image.width, image.height);
+                const code = QrScanner(
+                    imageData.data,
+                    imageData.width,
+                    imageData.height
+                );
+                if (code != null && code != '') {
+                    resolve(code.data); // Return dữ liệu
+                } else {
+                    reject(undefined);
+                }
+            };
+            image.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
+    useEffect(() => {
+        const interval = setInterval(captureAndSend, 1000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, [captureAndSend]);
 
     return (
         <div>
@@ -89,7 +128,6 @@ function QRScanner() {
                                         audio={false}
                                         ref={webcamRef}
                                         screenshotFormat="image/jpeg"
-                                        onScan={handleScanSuccess}
                                     />
                                 )}
                             </td>
