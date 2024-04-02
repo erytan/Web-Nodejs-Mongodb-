@@ -5,7 +5,7 @@ const { verifyAccessToken, isAdmin } = require('../middlewares/verifyToken')
 router.post('/dky-monhoc', [verifyAccessToken, isAdmin], ctrls.createMonHocDky)
 router.get('/', ctrls.getMonHocDky)
 router.put('/dkymonhoc/:tid', [verifyAccessToken], ctrls.updateTGMonHoc)
-
+router.get('/dkymonhoc/current/:tid', [verifyAccessToken], ctrls.getCurrentMHDKy)
 // router.get('/one/:blid', ctrls.getBlogs)
 // router.put('/like/:blid', verifyAccessToken, ctrls.likeBlog)
 // router.put('/dislike/:blid', verifyAccessToken, ctrls.dislikeBlog)

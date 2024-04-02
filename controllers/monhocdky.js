@@ -52,9 +52,22 @@ const getMonHocDky = asyncHandler(async(req, res) => {
         Monhoc: response ? response : " Something went wrong",
     })
 });
+const getCurrentMHDKy = asyncHandler(async (req, res) => {
+    const { tid } = req.params;
+    try {
+        const response = await monhocdky.findById(tid);
+        if (!response) {
+            return res.status(404).json({ success: false, message: 'MonHocDky not found' });
+        }
+        return res.status(200).json({ success: true, data: response });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
 
 module.exports = {
     createMonHocDky,
     updateTGMonHoc,
-    getMonHocDky
+    getMonHocDky,
+    getCurrentMHDKy
 }

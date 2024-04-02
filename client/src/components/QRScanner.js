@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import Webcam from 'react-webcam';
-import { apiGetDKyMonHoc } from "../apis/dkymonhoc";
-import './QRScanner.css'
+import { apiGetDKyMonHoc, apiMonHocDky } from "../apis/dkymonhoc";
+import './QRScanner.css';
 
 function QRScanner() {
     const webcamRef = useRef(null);
@@ -9,6 +9,7 @@ function QRScanner() {
     const [dkymonData, setDKyMonHocList] = useState(null); // Danh sách môn học
     const [selectedMonHoc, setSelectedMonHoc] = useState(null); // Môn học được chọn
     const [qrCode, setQrCode] = useState(null); // Mã QR đã quét
+    const [sinhVienDky, setSinhVienDky] = useState([]); // Danh sách sinh viên đăng ký môn học
     const [successMessage, setSuccessMessage] = useState(null); // Thông báo thành công
     const [errorMessage, setErrorMessage] = useState(null); // Thông báo lỗi
 
@@ -26,26 +27,36 @@ function QRScanner() {
         }
     };
 
-    // Mở hoặc tắt camera của môn học được chọn
-    const toggleCamera = (monHoc) => {
+    // Mở hoặc tắt camera của môn học được chọn và gọi hàm apiMonHocDky
+    const toggleCamera = async (monHoc) => {
         setSelectedMonHoc(monHoc); // Lưu môn học được chọn
         setCameraStates(prevStates => ({
             ...prevStates,
             [monHoc._id]: !prevStates[monHoc._id], // Đảo ngược trạng thái của camera cho môn học đó
         }));
+        
+        try {
+            const response = await apiMonHocDky(monHoc._id);
+            console.log("Mon hoc da chon:", response);
+            if (response && response.sinhviendky) {
+                setSinhVienDky(response.sinhviendky);
+            }
+        } catch (error) {
+            console.error("Error fetching selected monhoc:", error);
+        }
     };
 
     // Xử lý khi quét QR thành công
     const handleScanSuccess = useCallback(async (qrCode) => {
         setQrCode(qrCode); // Lưu mã QR đã quét vào state
-        if (selectedMonHoc && selectedMonHoc.sinhviendky.includes(qrCode)) {
+        if (selectedMonHoc && sinhVienDky.includes(qrCode)) {
             setSuccessMessage(`Quét thành công cho sinh viên: ${qrCode}`);
             setErrorMessage(null);
         } else {
             setSuccessMessage(null);
             setErrorMessage(`Sinh viên ${qrCode} không đăng ký môn học này.`);
         }
-    }, [selectedMonHoc]);
+    }, [selectedMonHoc, sinhVienDky]);
 
     return (
         <div>
