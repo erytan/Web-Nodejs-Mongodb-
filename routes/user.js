@@ -15,7 +15,7 @@ router.put('/resetpassword', ctrls.resetPassword)
 router.put('/current', [verifyAccessToken], ctrls.updateUser)
 router.put('/address', [verifyAccessToken], ctrls.updateUserAddress)
 
-router.get('/', [verifyAccessToken, isAdmin], ctrls.getUser)
+router.get('/', [verifyAccessToken], ctrls.getUser)
 router.delete('/', [verifyAccessToken, isAdmin], ctrls.deleteUser)
 router.put('/:uid', [verifyAccessToken, isAdmin], ctrls.updateUserByAdmin)
 

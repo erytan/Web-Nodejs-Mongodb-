@@ -15,7 +15,7 @@ export const apiThemSVDky = (monHocId, data) => {
   return axios({
     url: `dangkymonhoc/dkymonhoc/${monHocId}`,
     method: "put",
-    
+    data
   });
 };
 export const apiMonHocDky = (monHocId, data) => {
