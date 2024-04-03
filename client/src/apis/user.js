@@ -15,3 +15,8 @@ export const apiGetUSER = (data) => axios({
     method: 'get',
     data
 })
+export const apiGetAllUSER = (data) => axios({
+    url: 'user/',
+    method: 'get',
+    data
+})
