@@ -16,7 +16,7 @@ function QRScanner() {
     const [errorMessage, setErrorMessage] = useState(null); 
     const [, setScannedData] = useState([]); 
     const [allScannedData, setAllScannedData] = useState([]);
-    
+    const [qrCode, setQrCode] = useState([]);
 
     useEffect(() => {
         fetchDKyMonHocList();
