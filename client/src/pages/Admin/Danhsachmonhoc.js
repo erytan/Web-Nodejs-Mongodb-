@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { apiGetMonHoc, apiThemTGMonHoc } from "../../apis/monhoc"; // Import hàm API để thêm thời gian môn học
+import { apiGetMonHoc, apiThemTGMonHoc,apiDeleteMonHoc,apiGetCurrentMH } from "../../apis/monhoc"; // Import hàm API để thêm thời gian môn học
 import { apiCreateMonHocDky } from "../../apis/dkymonhoc";
 import { Button, TextInput } from "../../components";
 import "./Danhsachmonhoc.css";
@@ -25,6 +25,35 @@ const Dsmonhoc = () => {
     setSelectedMonHocId(id);
     setShowPopup(true);
   };
+  const handleDeleteMonHoc = async (monHocId) => {
+    try {
+      // Fetch mon hoc details
+      const response = await apiGetCurrentMH(monHocId); // Thay apiGetMonHocById bằng hàm lấy thông tin môn học từ API của bạn
+      if (response.success) {
+        const monHocDetails = response.data; // Assume response.data contains mon hoc details including tgmonhoc field
+        console.log(monHocDetails.tgmonhoc,monHocDetails.tgmonhoc.length )
+        // Check if tgmonhoc is not null
+        if (monHocDetails.tgmonhoc.length > 1) {
+          alert("Không thể xóa môn học có thời gian môn học");
+          return;
+        }
+        
+        // If tgmonhoc is null, proceed with deletion
+        const deleteResponse = await apiDeleteMonHoc(monHocId);
+        if (deleteResponse.success) {
+          alert("Xóa môn học thành công");
+          fetchMonHocList();
+        } else {
+          alert("Xóa môn học không thành công");
+        }
+      } else {
+        alert("Không thể lấy thông tin môn học. Vui lòng thử lại sau.");
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa môn học:", error);
+    }
+  };
+  
 
   const handleAddTime = async () => {
     try {
@@ -56,7 +85,8 @@ const Dsmonhoc = () => {
         const createMonHocDkyResponse = await apiCreateMonHocDky(dataToSend);
         if (createMonHocDkyResponse.success) {
           alert("Thêm thành công ", dataToSend);
-        } else {
+        }
+        else {
           alert("Có lỗi khi thêm thông tin. Vui lòng thử lại sau.");
         }
 
@@ -128,7 +158,13 @@ const Dsmonhoc = () => {
                     handleOnClick={() => handleSubmit(monhoc._id)}
                     style={{ width: "100%", marginBottom: "10px" }}
                     fw
-                  />
+                  />   
+                    <Button
+      name="Xóa"
+      handleOnClick={() => handleDeleteMonHoc(monhoc._id)} // Truyền monHocId vào hàm handleDeleteMonHoc
+      style={{ width: "100%", marginBottom: "10px" }}
+      fw
+    />
                 </td>
               </tr>
             ))}
@@ -152,6 +188,7 @@ const Dsmonhoc = () => {
               style={{ width: "100%", marginBottom: "10px" }}
               fw
             />
+          
           </div>
         </div>
       )}

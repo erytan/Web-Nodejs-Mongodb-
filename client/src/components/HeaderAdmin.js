@@ -46,7 +46,10 @@ const HeaderAdmin = () => {
         <Menu.Item key="10">
           <Link to={`${path.DSMONHOC}`}>Danh sách môn học</Link>
         </Menu.Item>
-
+        <Menu.Item key="10">
+          <Link to={`${path.DSMONHOC}`}>Danh sách môn học</Link>
+        </Menu.Item>
+        
         <Menu.Item key="4" style={{ float: 'right' }}>
   <div className="border w-main flex justify-between h-[150px] py-[15px]">
     <div className="flex text-[13px]">
