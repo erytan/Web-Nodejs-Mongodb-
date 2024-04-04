@@ -54,7 +54,26 @@
             return res.status(500).json({ success: false, error: 'Internal Server Error' });
         }
     });
-
+    const deletedMonHoc = asyncHandler(async(req, res) => {
+        const { mid } = req.params
+        const response = await monhoc.findByIdAndDelete(mid)
+        return res.status(200).json({
+            mes: response ? true : false,
+            updateBlog: response ? "Delete Successfully!!" : " Something went wrong",
+        })
+    });
+    const getCurrentMHDKy = asyncHandler(async (req, res) => {
+        const { mid } = req.params;
+        try {
+            const response = await monhoc.findById(mid);
+            if (!response) {
+                return res.status(404).json({ success: false, message: 'MonHoc not found' });
+            }
+            return res.status(200).json({ success: true, data: response });
+        } catch (error) {
+            return res.status(500).json({ success: false, error: error.message });
+        }
+    });
 
 
 
@@ -63,4 +82,6 @@
         getMonHoc,
         updateMonHoc,
         updateTGMonHoc,
+        deletedMonHoc,
+        getCurrentMHDKy,
     }

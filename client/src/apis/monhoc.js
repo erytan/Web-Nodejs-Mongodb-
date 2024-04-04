@@ -18,3 +18,16 @@
         data,   
     });
     };
+    export const apiDeleteMonHoc = (monHocId) => {
+        return axios({
+            url: `monhoc/${monHocId}`, // Đường dẫn của API
+            method: "delete", // Phương thức HTTP DELETE
+        });
+};
+export const apiGetCurrentMH = (monHocId, data) => {
+    return axios({
+        url: `monhoc/tgmonhoc/current/${monHocId}`,
+      method: "get",
+      data
+    });
+  };

@@ -14,6 +14,6 @@ router.put('/tgmonhoc/:mid', [verifyAccessToken,isAdmin], ctrls.updateTGMonHoc)
 
 
 // router.put('/:blid', [verifyAccessToken, isAdmin], ctrls.updateBlog)
-// router.delete('/:blid', [verifyAccessToken, isAdmin], ctrls.deleteBlog)
-
+router.delete('/:mid', [verifyAccessToken, isAdmin], ctrls.deletedMonHoc)
+router.get('/tgmonhoc/current/:mid', [verifyAccessToken,isAdmin], ctrls.getCurrentMHDKy)
 module.exports = router

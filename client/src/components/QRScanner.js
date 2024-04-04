@@ -132,7 +132,6 @@ function QRScanner() {
             <h2 style={{ textAlign: "center", fontFamily: "Arial" }}>
                 Scan QR Môn học
             </h2>
-
             <table className="table-container">
                 <thead>
                     <tr>
