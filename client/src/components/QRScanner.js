@@ -51,12 +51,12 @@ function QRScanner() {
             try {
                 let qrCodedetech = await detectQRCode(imageSrc);
                 setQrCode(qrCodedetech); // Lưu mã QR đã quét vào state
-                if (selectedMonHoc && sinhVienDky.includes(qrCode)) {
-                    setSuccessMessage(`Quét thành công cho sinh viên: ${qrCode}`);
+                if (selectedMonHoc && sinhVienDky.includes(qrCode.split('--')[1].trim())) {
+                    setSuccessMessage(`Quét thành công cho sinh viên: ${qrCode.split('--')[0].trim()}`);
                     setErrorMessage(null);
                 } else {
                     setSuccessMessage(null);
-                    setErrorMessage(`Sinh viên ${qrCode} không đăng ký môn học này.`);
+                    setErrorMessage(`Sinh viên ${qrCode.split('--')[0].trim()} không đăng ký môn học này.`);
                 }
             } catch (error) {
                 console.log("Không tìm thấy hình ảnh");
