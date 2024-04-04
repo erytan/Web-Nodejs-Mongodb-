@@ -22,10 +22,10 @@ const DkyMonHocList = () => {
 
   const handleRegister = async (monHocId) => {
     if (!isLoggedIn || !current._id) {
-      console.log("Bạn cần đăng nhập để đăng ký môn học");
+      alert("Bạn cần đăng nhập để đăng ký môn học");
       return;
     }
-
+    
     setIsPopupVisible(true); // Hiển thị popup khi nhấn vào nút "Đăng ký"
     setMonHocId1(monHocId); // Set monHocId1 với monHocId đã chọn
   };

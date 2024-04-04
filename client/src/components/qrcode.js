@@ -21,7 +21,7 @@ const QrCode = () => {
   useEffect(() => {
     if (isComponentLoaded) {
       // Cập nhật lại URL khi component được tải lại
-      setUrl(`${current?.firstname} ${current?.lastname} -- ${current?._id}`);
+      setUrl(`${current?._id}`);
     }
   }, [current, isComponentLoaded]);
 
